@@ -1,8 +1,10 @@
 package spring.com.security.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -65,11 +67,18 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 		String refresh_Token = JWT.create().withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
 				.withIssuer(request.getRequestURL().toString()).sign(algorithm);
+		
+		List<String> roles=user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 //		response.setHeader("access_Token",access_Token);
 //		response.setHeader("refresh_Token", refresh_Token);
-		Map<String, String> access_refresh_tokens=new HashMap<>();
+		Map<String, Object> access_refresh_tokens=new HashMap<>();
 		access_refresh_tokens.put("access_Token", access_Token);
 		access_refresh_tokens.put("refresh_Token", refresh_Token);
+		access_refresh_tokens.put("username", user.getUsername());
+		access_refresh_tokens.put("roles", roles);
+	
+
+		
 		response.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
 		new ObjectMapper().writeValue( response.getOutputStream(), access_refresh_tokens);
 	}
