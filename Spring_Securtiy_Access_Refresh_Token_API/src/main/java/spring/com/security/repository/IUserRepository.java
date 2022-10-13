@@ -7,4 +7,5 @@ import spring.com.security.entities.User;
 public interface IUserRepository extends MongoRepository<User, String> {
 
 	public User findByUsername(String username);
+	public User findByEmail(String email);
 }

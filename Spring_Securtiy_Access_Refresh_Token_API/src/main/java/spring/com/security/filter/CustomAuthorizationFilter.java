@@ -37,7 +37,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 		if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/user/token/refresh")) {
 			filterChain.doFilter(request, response);
-		} else {
+		} 
+		else {
 			String authorizationHeader = request.getHeader(org.springframework.http.HttpHeaders.AUTHORIZATION);
 			if (authorizationHeader != null & authorizationHeader.startsWith("Bearer")) {
 
@@ -59,11 +60,11 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 				} catch (Exception e) {
 					log.error("Error LOGGING IN : {}",e.getMessage());
 					//System.out.println("ERROR LOGIN"+e.getMessage());
-					response.setHeader("ERROR ", e.getMessage());
+					response.setHeader("ERROR  {}", e.getMessage());
 					response.setStatus(FORBIDDEN.value());
 					//response.sendError(FORBIDDEN.value());
 					Map<String, String> error=new HashMap<>();
-					error.put("access_Token",e.getMessage());
+					error.put("ERROR {}",e.getMessage());
 					
 					response.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
 					new ObjectMapper().writeValue( response.getOutputStream(), error);

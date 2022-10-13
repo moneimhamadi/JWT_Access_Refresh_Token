@@ -1,7 +1,6 @@
 package spring.com.security.filter;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -77,8 +76,6 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 		access_refresh_tokens.put("username", user.getUsername());
 		access_refresh_tokens.put("roles", roles);
 	
-
-		
 		response.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
 		new ObjectMapper().writeValue( response.getOutputStream(), access_refresh_tokens);
 	}

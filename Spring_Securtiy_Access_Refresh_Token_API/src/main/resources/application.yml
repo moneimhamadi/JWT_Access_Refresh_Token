@@ -1,0 +1,9 @@
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#      -id: annonce-service
+#      uri: 
+#        lb://annonce-service
+##      predicates :
+##        - Path=/HelloWorld

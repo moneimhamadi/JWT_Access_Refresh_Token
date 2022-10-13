@@ -9,4 +9,5 @@ public interface IUserService {
 	public User addUser(User user);
 	public User getOneUserByUsername(String username);
 	public List<User> getAllUsers();
+	public String enableUser(String emailUser);
 }

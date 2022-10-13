@@ -36,17 +36,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		CustomAuthFilter cunstomFilter=new CustomAuthFilter(authenticationManagerBean());
+		CustomAuthFilter cunstomFilter = new CustomAuthFilter(authenticationManagerBean());
 		cunstomFilter.setFilterProcessesUrl("/api/login");
+		
 		http.csrf().disable();
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/api/login/**","/user/token/refresh/**").permitAll();
-		http.authorizeRequests().antMatchers("/user/getAllUsers").hasAnyAuthority("RESPONSABLE");
-		http.authorizeRequests().antMatchers("/user/saveUser").hasAnyAuthority("ADMINISTRATOR");
-		http.authorizeRequests().anyRequest().authenticated();
+		http.authorizeRequests().antMatchers("/api/login/**", "/user/token/refresh/**","/token/confirmToken/**","/user/saveUser").permitAll();
+		
+//		http.authorizeRequests().antMatchers("/user/getAllUsers").hasAnyAuthority("ADMINISTRATOR");
+//		http.authorizeRequests().antMatchers("/user/saveUser").hasAnyAuthority("ADMINISTRATOR");
+		http.authorizeRequests().anyRequest().permitAll();
 		http.addFilter(cunstomFilter);
-		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+//		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean
