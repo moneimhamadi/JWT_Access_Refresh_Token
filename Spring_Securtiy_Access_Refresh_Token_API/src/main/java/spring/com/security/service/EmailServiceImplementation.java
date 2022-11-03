@@ -34,9 +34,8 @@ public class EmailServiceImplementation implements EmailSender {
 			helper.setSubject("Account confirmation");
 			helper.setFrom("hammadi.moneim@esprit.tn");
 			mailSender.send(mimeMessage);
-			log.info(mimeMessage.toString());
 		} catch (MessagingException message) {
-			log.error("Failed to send Eamil",message);
+			// log.error("Failed to send Eamil",message);
 			throw new IllegalStateException("Failed to Send Email");
 		}
 		

@@ -17,10 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import spring.com.security.entities.User;
 import spring.com.security.service.IUserService;
+//import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 //@EnableEurekaClient
 //@EnableZuulProxy
 @SpringBootApplication
+//@EnableSwagger2
 public class SpringSecurtiyAccessRefreshTokenApiApplication {
 
 	public static void main(String[] args) {
@@ -38,7 +40,8 @@ public class SpringSecurtiyAccessRefreshTokenApiApplication {
     	JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     	mailSender.setHost("smtp.gmail.com");
     	mailSender.setPort(587);
-    
+    	mailSender.setUsername("hammadi.moneim@esprit.tn");
+    	mailSender.setPassword("brouklou1990M");
     	Properties props = mailSender.getJavaMailProperties();
     	props.put("mail.transport.protocol", "smtp");
     	props.put("mail.smtp.auth", "true");

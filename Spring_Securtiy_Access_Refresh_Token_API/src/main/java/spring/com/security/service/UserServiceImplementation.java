@@ -61,6 +61,8 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 	@Async
 	public User addUser(User user) {
 
+		
+		
 		if ((userRepository.findByUsername(user.getUsername()) != null)
 				|| (userRepository.findByEmail(user.getEmail()) != null)) {
 			throw new IllegalStateException("User or Email Already Exists  !! ");

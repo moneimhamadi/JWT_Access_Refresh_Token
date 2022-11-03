@@ -56,8 +56,8 @@ public class UserController {
 
 	@PostMapping("/saveUser")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
-		ResponseEntity.ok(userService.addUser(user));
-		return ResponseEntity.ok().build();
+		return		ResponseEntity.ok(userService.addUser(user));
+		 //ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/token/refresh")
