@@ -25,7 +25,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -103,5 +105,16 @@ public class UserController {
 		}
 
 	}
+	@GetMapping("/isEnabled/{username}")
+	public int isEnabled(@PathVariable String username) {
+		return userService.isEnabled(username);
+	}
+	
+	
+	@PutMapping("/changeUserPassword/{token}/{newPassword}")
+	public int changeUserPassword (@PathVariable String token,@PathVariable String newPassword) {
+		return userService.changePassword(token, newPassword);
+	}
+
 
 }

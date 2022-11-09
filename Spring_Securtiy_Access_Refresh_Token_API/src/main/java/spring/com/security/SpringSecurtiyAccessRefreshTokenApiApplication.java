@@ -41,7 +41,7 @@ public class SpringSecurtiyAccessRefreshTokenApiApplication {
     	mailSender.setHost("smtp.gmail.com");
     	mailSender.setPort(587);
     	mailSender.setUsername("hammadi.moneim@esprit.tn");
-    	mailSender.setPassword("brouklou1990M");
+    	mailSender.setPassword("brouklou1990MM");
     	Properties props = mailSender.getJavaMailProperties();
     	props.put("mail.transport.protocol", "smtp");
     	props.put("mail.smtp.auth", "true");

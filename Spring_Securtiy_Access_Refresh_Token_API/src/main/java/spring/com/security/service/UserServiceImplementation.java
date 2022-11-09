@@ -61,8 +61,6 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 	@Async
 	public User addUser(User user) {
 
-		
-		
 		if ((userRepository.findByUsername(user.getUsername()) != null)
 				|| (userRepository.findByEmail(user.getEmail()) != null)) {
 			throw new IllegalStateException("User or Email Already Exists  !! ");
@@ -72,7 +70,6 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			log.info("Saving User in DataBase  ....");
-
 
 			User registredUser = userRepository.save(user);
 
@@ -84,10 +81,10 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 			confirmToken.setIdUser(registredUser.getId());
 
 			tokenRepository.save(confirmToken);
-			String link="http://localhost:6039/token/confirmToken/"+token;
-			
+			String link = "http://localhost:6039/token/confirmToken/" + token;
+
 			emailSender.send(user.getEmail(), emailSender.buildEmail(user.getNom(), link));
-			
+
 			return registredUser;
 
 		}
@@ -112,6 +109,74 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 		u.setEnabled(true);
 		userRepository.save(u);
 		return ("User with eamil " + u.getEmail() + " is eanbled ");
+	}
+
+	@Override
+	public int isEnabled(String username) {
+
+		int x = 0;
+		User u = userRepository.findByUsername(username);
+		if (u == null) {
+			x = 0;
+		} else if (u.getEnabled() == true) {
+			x = 2;
+		} else if (u.getEnabled() == false) {
+			x = 1;
+		}
+		return x;
+
+	}
+
+	@Override
+	public int sendEmailForgetPassword(String username) throws UnknownError {
+
+		User u = userRepository.findByUsername(username);
+		if (u == null) {
+			return 0;
+		} else {
+			ConfirmationToken ConfirmToken = new ConfirmationToken();
+
+			String token = UUID.randomUUID().toString();
+			ConfirmToken.setToken(token);
+			ConfirmToken.setCretationDate(LocalDateTime.now());
+			ConfirmToken.setExpirationDate(LocalDateTime.now().plusMinutes(60));
+			ConfirmToken.setIdUser(u.getId());
+			tokenRepository.save(ConfirmToken);
+
+			String link = "http://localhost:4200/reset-password/" + token;
+			emailSender.send(u.getEmail(), emailSender.buildForgetPasswordEmail(u.getNom(), link));
+			log.info("EMAIL IN NOW SENEDING TO  .......=>  " + u.getEmail() + " Be patient");
+
+			return 1;
+		}
+
+	}
+
+	@Override
+	public int changePassword(String token, String newPassword) {
+		ConfirmationToken restPwdToken = tokenRepository.findByToken(token)
+				.orElseThrow(() -> new IllegalStateException("Token not found !!"));
+		
+		if (restPwdToken.getConfirmationDate() != null) {
+			throw new IllegalStateException("Token déja confirmé");
+		}
+
+		LocalDateTime expiredAt = restPwdToken.getExpirationDate();
+
+		if (expiredAt.isBefore(LocalDateTime.now())) {
+			throw new IllegalStateException("Token is expired  !!");
+		}
+
+		restPwdToken.setConfirmationDate(LocalDateTime.now());
+		tokenRepository.save(restPwdToken);
+		
+		User userToUpdateHisPassword=userRepository.findById((restPwdToken.getIdUser())).get();
+		
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	//	user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userToUpdateHisPassword.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(userToUpdateHisPassword);
+		return 1;
 	}
 
 }
