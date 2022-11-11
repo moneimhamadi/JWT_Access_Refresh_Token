@@ -158,13 +158,13 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 				.orElseThrow(() -> new IllegalStateException("Token not found !!"));
 		
 		if (restPwdToken.getConfirmationDate() != null) {
-			throw new IllegalStateException("Token déja confirmé");
+			return 0;
 		}
 
 		LocalDateTime expiredAt = restPwdToken.getExpirationDate();
 
 		if (expiredAt.isBefore(LocalDateTime.now())) {
-			throw new IllegalStateException("Token is expired  !!");
+			return 1;
 		}
 
 		restPwdToken.setConfirmationDate(LocalDateTime.now());
@@ -176,7 +176,7 @@ public class UserServiceImplementation implements IUserService, UserDetailsServi
 	//	user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userToUpdateHisPassword.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(userToUpdateHisPassword);
-		return 1;
+		return 2;
 	}
 
 }
